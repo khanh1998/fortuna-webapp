@@ -1,18 +1,39 @@
 import { ApolloClient } from 'apollo-client';
 import { createHttpLink } from 'apollo-link-http';
 import { InMemoryCache } from 'apollo-cache-inmemory';
+// for subscription
+// import { split } from 'apollo-link';
+// import { WebSocketLink } from 'apollo-link-ws';
+// import { getMainDefinition } from 'apollo-utilities';
 
-// HTTP connection to the API
 const httpLink = createHttpLink({
-  // You should use an absolute URL here
-  uri: 'http://localhost:3020/graphql',
+  uri: 'http://localhost:4000',
 });
 
-// Cache implementation
+// const wsLink = new WebSocketLink({
+//   uri: 'ws://localhost:4000/subscriptions',
+//   options: {
+//     reconnect: true,
+//   },
+// });
+// const link = split(
+//   ({ query }) => {
+//     const definition = getMainDefinition(query);
+//     return (
+//       definition.kind === 'OperationDefinition'
+//       && definition.operation === 'subscription'
+//     );
+//   },
+//   wsLink,
+//   httpLink,
+// );
+
 const cache = new InMemoryCache();
 
-// Create the apollo client
-export const apolloClient = new ApolloClient({
+const apolloClient = new ApolloClient({
   link: httpLink,
   cache,
+  connectToDevTools: true,
 });
+
+export default apolloClient;

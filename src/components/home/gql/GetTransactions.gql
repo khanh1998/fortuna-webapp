@@ -1,0 +1,21 @@
+query {
+  getTransactionsByUser(username: "khanh") {
+    id
+    description
+    amount
+    total
+    createdAt
+    updatedAt
+    asset {
+      code
+      name
+      description
+    }
+    prev {
+      id
+      amount
+      total
+      description
+    }
+  }
+}
