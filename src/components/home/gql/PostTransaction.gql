@@ -1,0 +1,33 @@
+mutation (
+  $description: String
+  $amount: Int
+  $total: Int
+  $userId: ID
+  $assetId: ID
+  $prevTransactionId: ID
+) {
+  createTransaction(
+    input: {
+      description: $description
+      amount: $amount
+      total: $total
+      userId: $userId
+      assetId: $assetId
+      prevTransactionId: $prevTransactionId
+    }
+  ) {
+    id
+    userId
+    assetId
+    description
+    asset {
+      name
+      code
+    }
+    prev {
+      amount
+      total
+      id
+    }
+  }
+}
