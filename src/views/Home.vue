@@ -4,7 +4,7 @@
       <v-row>
         <v-col cols="12" sm="2">
           <v-sheet rounded="lg" min-height="268">
-            <!--  -->
+            <left-bar/>
           </v-sheet>
         </v-col>
 
@@ -26,10 +26,11 @@
 
 <script>
 import TransactionList from '../components/home/TransactionList.vue';
+import LeftBar from '../components/home/LeftBar.vue';
 
 export default {
   name: 'Home',
 
-  components: { TransactionList },
+  components: { TransactionList, LeftBar },
 };
 </script>

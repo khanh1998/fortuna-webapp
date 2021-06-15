@@ -33,9 +33,9 @@ export default {
       description: '',
       amount: 0,
       total: 0,
-      userId: '60c3263bc09fc11bd6b454bd',
-      assetId: '60c5baaac6b5f0207eaba544',
-      prevTransactionId: '60c5ca9930a5fe2b8d6ecfd0',
+      user: '60c3263bc09fc11bd6b454bd',
+      asset: '60c5baaac6b5f0207eaba544',
+      prev: '60c5ca9930a5fe2b8d6ecfd0',
     },
   }),
   apollo: {

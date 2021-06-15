@@ -1,6 +1,8 @@
 import { ApolloClient } from 'apollo-client';
 import { createHttpLink } from 'apollo-link-http';
 import { InMemoryCache } from 'apollo-cache-inmemory';
+import typeDefs from './schema/user.gql';
+import { UserResolvers } from './schema/userResolver';
 // for subscription
 // import { split } from 'apollo-link';
 // import { WebSocketLink } from 'apollo-link-ws';
@@ -32,6 +34,8 @@ const cache = new InMemoryCache();
 
 const apolloClient = new ApolloClient({
   link: httpLink,
+  typeDefs,
+  resolvers: UserResolvers,
   cache,
   connectToDevTools: true,
 });

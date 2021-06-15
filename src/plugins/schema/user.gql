@@ -1,0 +1,35 @@
+type User {
+  id: ID
+  username: String
+  name: String
+  avatar: String
+  email: String
+  phone: String
+  language: String
+  currency: String
+  assets: [Asset]
+  lastestTransactions: [Transaction]
+}
+type Asset {
+  id: ID
+  name: String
+  code: String
+  description: String
+  unit: String
+  createdAt: String
+  updatedAt: String
+}
+type Transaction {
+  id: ID
+  description: String
+  amount: Int
+  total: Int
+  asset: Asset
+  prev: TransactionShort
+  createdAt: String
+  updatedAt: String
+}
+
+type Mutation {
+  SetUser: User
+}
