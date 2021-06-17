@@ -1,0 +1,9 @@
+query {
+	Assets {
+		id
+		code
+		name
+		description
+		unit
+	}
+}

@@ -2,19 +2,19 @@
   <v-main class="grey lighten-3">
     <v-container>
       <v-row>
-        <v-col cols="12" sm="2">
+        <v-col cols="12" sm="3">
           <v-sheet rounded="lg" min-height="268">
             <left-bar/>
           </v-sheet>
         </v-col>
 
-        <v-col cols="12" sm="8">
+        <v-col cols="12" sm="6">
           <v-sheet min-height="70vh" rounded="lg">
             <transaction-list />
           </v-sheet>
         </v-col>
 
-        <v-col cols="12" sm="2">
+        <v-col cols="12" sm="3">
           <v-sheet rounded="lg" min-height="268">
             <!--  -->
           </v-sheet>
