@@ -1,8 +1,8 @@
 <template>
   <v-list>
     <v-subheader>Asset</v-subheader>
-    <v-list-item-group v-model="selectedItem" color="primary">
-      <v-list-item v-for="item in Transactions" :key="item.id">
+    <v-list-item-group v-model="selectedItem" color="primary" @change="selectTransaction">
+      <v-list-item v-for="item in Transactions" :key="item.id" >
         {{ item.description }}
       </v-list-item>
     </v-list-item-group>
@@ -95,6 +95,10 @@ export default {
         })
         .then(() => console.log('create transaction successs'))
         .catch((err) => console.log({ err }));
+    },
+    selectTransaction() {
+      const transaction = this.Transactions[this.selectedItem];
+      this.$emit('select-transaction', transaction);
     },
   },
   created() {},
