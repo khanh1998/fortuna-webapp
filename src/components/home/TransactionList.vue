@@ -59,14 +59,7 @@ export default {
   },
   methods: {
     createTransaction() {
-      const {
-        description,
-        amount,
-        total,
-        userId,
-        assetId,
-        prevTransactionId,
-      } = this.newTransaction;
+      const { description, amount, total, user, prev } = this.newTransaction;
 
       this.$apollo
         .mutate({
@@ -77,14 +70,27 @@ export default {
             // eslint-disable-next-line radix
             amount: parseInt(amount),
             total,
-            userId,
-            assetId,
-            prevTransactionId,
+            user,
+            asset: this.selectedAsset.id,
+            prev,
           },
           update: (store, { data: { createTransaction } }) => {
-            const data = store.readQuery({ query: GET_TRANSACTIONS });
-            data.getTransactionsByUser.push(createTransaction);
-            store.writeQuery({ query: GET_TRANSACTIONS, data });
+            const data = store.readQuery({
+              query: GET_TRANSACTIONS,
+              variables: {
+                user: '60c3263bc09fc11bd6b454bd',
+                asset: this.selectedAsset.id,
+              },
+            });
+            data.Transactions.push(createTransaction);
+            store.writeQuery({
+              query: GET_TRANSACTIONS,
+              variables: {
+                user: '60c3263bc09fc11bd6b454bd',
+                asset: this.selectedAsset.id,
+              },
+              data,
+            });
           },
         })
         .then(() => console.log('create transaction successs'))
