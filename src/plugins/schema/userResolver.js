@@ -1,9 +1,9 @@
-import GET_USER from './userQuery.gql';
+// import GET_USER from './userQuery.gql';
 
 export const UserResolvers = {
   Mutation: {
-    SetUser: (root, { user }, { cache }) => {
-      cache.writeQuery({ query: GET_USER, user });
-    },
+    // PickAsset: (root, { assetId }, { cache }) => {
+    //   cache.writeQuery({ query: GET_USER, user });
+    // },
   },
 };

@@ -1,8 +1,11 @@
 <template>
   <v-list>
-    <v-list-item v-for="item in getTransactionsByUser" :key="item.id">
-      {{ item.description }}
-    </v-list-item>
+    <v-subheader>Asset</v-subheader>
+    <v-list-item-group v-model="selectedItem" color="primary">
+      <v-list-item v-for="item in Transactions" :key="item.id">
+        {{ item.description }}
+      </v-list-item>
+    </v-list-item-group>
     <v-list-item>
       <v-text-field
         v-model="newTransaction.description"
@@ -27,19 +30,32 @@ import POST_TRANSACTION from './gql/PostTransaction.gql';
 
 export default {
   name: 'TransactionList',
+  props: {
+    selectedAsset: Object,
+  },
   data: () => ({
-    getTransactionsByUser: [],
+    Transactions: [],
     newTransaction: {
       description: '',
       amount: 0,
       total: 0,
       user: '60c3263bc09fc11bd6b454bd',
-      asset: '60c5baaac6b5f0207eaba544',
+      asset: null,
       prev: '60c5ca9930a5fe2b8d6ecfd0',
     },
+    selectedItem: 0,
   }),
   apollo: {
-    getTransactionsByUser: GET_TRANSACTIONS,
+    Transactions: {
+      query: GET_TRANSACTIONS,
+      variables() {
+        console.log('get transacion called', this.selectedAsset.id);
+        return {
+          user: '60c3263bc09fc11bd6b454bd',
+          asset: this.selectedAsset.id,
+        };
+      },
+    },
   },
   methods: {
     createTransaction() {

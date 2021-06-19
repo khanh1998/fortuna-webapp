@@ -1,7 +1,7 @@
 import { ApolloClient } from 'apollo-client';
 import { createHttpLink } from 'apollo-link-http';
 import { InMemoryCache } from 'apollo-cache-inmemory';
-import typeDefs from './schema/user.gql';
+import typeDefs from './schema/user2.gql';
 import { UserResolvers } from './schema/userResolver';
 // for subscription
 // import { split } from 'apollo-link';

@@ -1,8 +1,16 @@
 <template>
   <v-list v-if="User != null">
-    <v-list-item v-for="asset in User.assets" :key="asset.code">
-      <v-list-item-title>{{ asset.name }}</v-list-item-title>
-    </v-list-item>
+    <v-subheader>Asset</v-subheader>
+    <v-list-item-group
+      v-model="selectedItem"
+      color="primary"
+      @change="selectAsset"
+    >
+      <v-list-item v-for="asset in User.assets" :key="asset.code">
+        <v-list-item-title>{{ asset.name }}</v-list-item-title>
+      </v-list-item>
+    </v-list-item-group>
+    <v-divider />
     <v-list-item>
       <v-list-item-action>
         <v-combobox
@@ -47,14 +55,24 @@ export default {
     newAsset: {
       select: '',
     },
+    selectedItem: 0,
+    counter: 0,
   }),
   apollo: {
     User() {
       return {
         query: GET_USER,
+        result: function () {
+          this.counter += 1;
+        },
       };
     },
-    Assets: GET_ASSETS,
+    Assets: {
+      query: GET_ASSETS,
+      result: function () {
+        this.counter += 2;
+      },
+    },
   },
   methods: {
     addNewAsset() {
@@ -91,14 +109,31 @@ export default {
           this.newAsset.select = '';
         });
     },
+    selectAsset() {
+      if (this.User && this.User.assets.length > 0) {
+        console.log('finally got here');
+        const asset = this.User.assets[this.selectedItem];
+        console.log(JSON.stringify(asset));
+        this.$emit('select-asset', asset);
+      }
+    },
   },
   computed: {
     addableAssets() {
-      if (!this.$apollo.loading) {
+      if (!this.$apollo.loading && this.User && this.Assets) {
         const allAssetIds = this.User.assets.map((item) => item.id);
         return this.Assets.filter((item) => !allAssetIds.includes(item.id));
       }
       return [];
+    },
+  },
+  created() {},
+  watch: {
+    addableAssets: function (newVal) {
+      if (newVal != null) {
+        console.log('call it');
+        this.selectAsset();
+      }
     },
   },
 };

@@ -1,5 +1,5 @@
-query {
-  getTransactionsByUser(username: "khanh") {
+query GetTransaction($user: ID, $asset: ID) {
+  Transactions(user: $user, asset: $asset) {
     id
     description
     amount
