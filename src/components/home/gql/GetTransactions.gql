@@ -1,5 +1,5 @@
-query GetTransaction($user: ID, $asset: ID) {
-  Transactions(user: $user, asset: $asset) {
+query GetTransaction($asset: ID) {
+  Transactions(asset: $asset) {
     id
     description
     amount

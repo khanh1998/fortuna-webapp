@@ -38,10 +38,7 @@ export default {
     newTransaction: {
       description: '',
       amount: 0,
-      total: 0,
-      user: '60c3263bc09fc11bd6b454bd',
       asset: null,
-      prev: '60c5ca9930a5fe2b8d6ecfd0',
     },
     selectedItem: 0,
   }),
@@ -51,7 +48,6 @@ export default {
       variables() {
         console.log('get transacion called', this.selectedAsset.id);
         return {
-          user: '60c3263bc09fc11bd6b454bd',
           asset: this.selectedAsset.id,
         };
       },
@@ -78,7 +74,6 @@ export default {
             const data = store.readQuery({
               query: GET_TRANSACTIONS,
               variables: {
-                user: '60c3263bc09fc11bd6b454bd',
                 asset: this.selectedAsset.id,
               },
             });
@@ -86,7 +81,6 @@ export default {
             store.writeQuery({
               query: GET_TRANSACTIONS,
               variables: {
-                user: '60c3263bc09fc11bd6b454bd',
                 asset: this.selectedAsset.id,
               },
               data,

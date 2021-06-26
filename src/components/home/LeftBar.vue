@@ -34,7 +34,7 @@ import GET_ASSETS from './gql/GetAsset.gql';
 
 const GET_USER = gql`
   query {
-    User(id: "khanh") {
+    User {
       username
       name
       email
