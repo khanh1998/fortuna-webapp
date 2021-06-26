@@ -8,6 +8,8 @@ import vuetify from './plugins/vuetify';
 import 'roboto-fontface/css/roboto/roboto-fontface.css';
 import '@mdi/font/css/materialdesignicons.css';
 import apolloProvider from './plugins/apolloProvider';
+import './plugins/firebase';
+import './plugins/axios';
 
 Vue.use(VueApollo);
 

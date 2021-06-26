@@ -41,6 +41,7 @@
 
 <script>
 import { gql } from 'graphql-tag';
+import { firebase, provider } from '../plugins/firebase';
 
 const GET_USER = gql`
   query {
@@ -69,8 +70,23 @@ export default {
     },
   },
   methods: {
-    doLogin() {
-      this.$router.push('/transaction');
+    async doLogin() {
+      try {
+        const result = await firebase.auth().signInWithPopup(provider);
+        console.log(result);
+        const idToken = await firebase.auth().currentUser.getIdToken(true);
+        console.log(idToken);
+        const res = await window.axios.post('/auth/firebase/facebook', {}, {
+          headers: {
+            Authorization: `Bearer ${idToken.toString()}`,
+          },
+        });
+        console.log(res);
+        localStorage.setItem('JWT', res.data.message);
+        this.$router.push('/');
+      } catch (error) {
+        console.log(error);
+      }
     },
   },
 };
