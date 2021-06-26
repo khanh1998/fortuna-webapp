@@ -1,6 +1,7 @@
 import { ApolloClient } from 'apollo-client';
 import { createHttpLink } from 'apollo-link-http';
 import { InMemoryCache } from 'apollo-cache-inmemory';
+import { setContext } from 'apollo-link-context';
 import typeDefs from './schema/user2.gql';
 import { UserResolvers } from './schema/userResolver';
 // for subscription
@@ -32,8 +33,18 @@ const httpLink = createHttpLink({
 
 const cache = new InMemoryCache();
 
+const authLink = setContext((_, { headers }) => {
+  const token = localStorage.getItem('JWT');
+  return {
+    headers: {
+      ...headers,
+      authorization: token ? `Bearer ${token}` : '',
+    },
+  };
+});
+
 const apolloClient = new ApolloClient({
-  link: httpLink,
+  link: authLink.concat(httpLink),
   typeDefs,
   resolvers: UserResolvers,
   cache,
