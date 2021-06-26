@@ -18,6 +18,8 @@ mutation (
   ) {
     id
     description
+    total
+    amount
     asset {
       id
     }

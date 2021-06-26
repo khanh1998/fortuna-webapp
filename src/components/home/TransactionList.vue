@@ -3,7 +3,7 @@
     <v-subheader>Asset</v-subheader>
     <v-list-item-group v-model="selectedItem" color="primary" @change="selectTransaction">
       <v-list-item v-for="item in Transactions" :key="item.id" >
-        {{ item.description }}
+        {{ item.description }} | {{item.total}} | {{item.amount}}
       </v-list-item>
     </v-list-item-group>
     <v-list-item>
@@ -38,7 +38,6 @@ export default {
     newTransaction: {
       description: '',
       amount: 0,
-      asset: null,
     },
     selectedItem: 0,
   }),
@@ -55,7 +54,7 @@ export default {
   },
   methods: {
     createTransaction() {
-      const { description, amount, total, user, prev } = this.newTransaction;
+      const { description, amount } = this.newTransaction;
 
       this.$apollo
         .mutate({
@@ -65,12 +64,10 @@ export default {
             description,
             // eslint-disable-next-line radix
             amount: parseInt(amount),
-            total,
-            user,
             asset: this.selectedAsset.id,
-            prev,
           },
           update: (store, { data: { createTransaction } }) => {
+            console.log(createTransaction);
             const data = store.readQuery({
               query: GET_TRANSACTIONS,
               variables: {
@@ -87,7 +84,11 @@ export default {
             });
           },
         })
-        .then(() => console.log('create transaction successs'))
+        .then(() => {
+          console.log('create transaction successs');
+          this.newTransaction.description = '';
+          this.newTransaction.amount = 0;
+        })
         .catch((err) => console.log({ err }));
     },
     selectTransaction() {
