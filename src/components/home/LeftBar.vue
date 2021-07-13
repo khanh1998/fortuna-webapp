@@ -1,19 +1,26 @@
 <template>
-  <v-list v-if="user != null">
+  <v-list v-if="user != null" rounded>
     <v-subheader>Asset</v-subheader>
-    <v-list-item-group
-      v-model="selectedItem"
-      color="primary"
-      @change="selectAsset"
+    <v-list-group
+      v-model="assetGroupsExpand[assetGroup.id]"
+      v-for="assetGroup in assetGroups"
+      :key="assetGroup.id"
+      no-action
     >
-      <v-list-item
-        v-for="asset in assets"
-        :key="asset.code"
-        @click="selectAsset"
-      >
-        <v-list-item-title>{{ asset.name }}</v-list-item-title>
-      </v-list-item>
-    </v-list-item-group>
+      <template v-slot:activator>
+        <v-list-item-title>{{ assetGroup.name }}</v-list-item-title>
+      </template>
+      <list-asset
+        :assets="getAssetsOfGroup(assetGroup.id)"
+        @select-asset="selectAsset"
+      />
+    </v-list-group>
+    <v-list-group v-model="assetGroupsExpand['other']" no-action>
+      <template v-slot:activator>
+        <v-list-item-title>Other</v-list-item-title>
+      </template>
+      <list-asset :assets="getAssetsOfGroup()" @select-asset="selectAsset" />
+    </v-list-group>
     <v-divider />
     <v-list-item>
       <v-list-item-action>
@@ -34,6 +41,8 @@
 <script>
 import { gql } from 'graphql-tag';
 import GET_ASSETS from './gql/GetAsset.gql';
+import GET_ASSET_GROUPS from './gql/GetAssetGroups.gql';
+import ListAsset from './leftbar/ListAsset.vue';
 
 const GET_USER = gql`
   query {
@@ -46,13 +55,17 @@ const GET_USER = gql`
 `;
 export default {
   name: 'LeftBar',
+  components: { ListAsset },
   data: () => ({
     user: null,
     assets: null,
+    assetGroups: null,
+    assetGroupsExpand: {},
     newAsset: {
       select: '',
     },
     selectedItem: 0,
+    selectedGroup: 0,
   }),
   apollo: {
     user() {
@@ -62,6 +75,9 @@ export default {
     },
     assets: {
       query: GET_ASSETS,
+    },
+    assetGroups: {
+      query: GET_ASSET_GROUPS,
     },
   },
   methods: {
@@ -99,17 +115,20 @@ export default {
           this.newAsset.select = '';
         });
     },
-    selectAsset() {
-      console.log('finally got here');
-      const asset = this.assets[this.selectedItem];
-      console.log(JSON.stringify(asset));
+    selectAsset(asset) {
       this.$emit('select-asset', asset);
+    },
+    getAssetsOfGroup(groupId) {
+      if (groupId) {
+        return this.assets.filter((item) => item.group === groupId);
+      }
+      return this.assets.filter((item) => !item.group);
     },
   },
   computed: {},
   created() {},
   watch: {
-    addableAssets: function (newVal) {
+    addableAssets(newVal) {
       if (newVal != null) {
         console.log('call it');
         this.selectAsset();

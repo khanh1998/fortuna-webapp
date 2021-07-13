@@ -1,0 +1,8 @@
+query {
+  assetGroups {
+    name
+    id
+    createdAt
+    updatedAt
+  }
+}
