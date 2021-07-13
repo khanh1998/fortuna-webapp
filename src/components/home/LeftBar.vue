@@ -1,12 +1,16 @@
 <template>
-  <v-list v-if="User != null">
+  <v-list v-if="user != null">
     <v-subheader>Asset</v-subheader>
     <v-list-item-group
       v-model="selectedItem"
       color="primary"
       @change="selectAsset"
     >
-      <v-list-item v-for="asset in User.assets" :key="asset.code">
+      <v-list-item
+        v-for="asset in assets"
+        :key="asset.code"
+        @click="selectAsset"
+      >
         <v-list-item-title>{{ asset.name }}</v-list-item-title>
       </v-list-item>
     </v-list-item-group>
@@ -15,13 +19,12 @@
       <v-list-item-action>
         <v-combobox
           v-model="newAsset.select"
-          :items="addableAssets"
           item-text="name"
           item-value="id"
           label="add new asset"
           dense
         ></v-combobox>
-        <v-btn v-if="newAsset.select" @click="addNewAsset">
+        <v-btn v-if="newAsset.select">
           <v-icon>mdi-plus</v-icon>
         </v-btn>
       </v-list-item-action>
@@ -34,44 +37,31 @@ import GET_ASSETS from './gql/GetAsset.gql';
 
 const GET_USER = gql`
   query {
-    User {
+    user {
       username
       name
       email
-      assets {
-        name
-        code
-        id
-        description
-      }
     }
   }
 `;
 export default {
   name: 'LeftBar',
   data: () => ({
-    User: null,
-    Assets: null,
+    user: null,
+    assets: null,
     newAsset: {
       select: '',
     },
     selectedItem: 0,
-    counter: 0,
   }),
   apollo: {
-    User() {
+    user() {
       return {
         query: GET_USER,
-        result: function () {
-          this.counter += 1;
-        },
       };
     },
-    Assets: {
+    assets: {
       query: GET_ASSETS,
-      result: function () {
-        this.counter += 2;
-      },
     },
   },
   methods: {
@@ -110,23 +100,13 @@ export default {
         });
     },
     selectAsset() {
-      if (this.User && this.User.assets.length > 0) {
-        console.log('finally got here');
-        const asset = this.User.assets[this.selectedItem];
-        console.log(JSON.stringify(asset));
-        this.$emit('select-asset', asset);
-      }
+      console.log('finally got here');
+      const asset = this.assets[this.selectedItem];
+      console.log(JSON.stringify(asset));
+      this.$emit('select-asset', asset);
     },
   },
-  computed: {
-    addableAssets() {
-      if (!this.$apollo.loading && this.User && this.Assets) {
-        const allAssetIds = this.User.assets.map((item) => item.id);
-        return this.Assets.filter((item) => !allAssetIds.includes(item.id));
-      }
-      return [];
-    },
-  },
+  computed: {},
   created() {},
   watch: {
     addableAssets: function (newVal) {

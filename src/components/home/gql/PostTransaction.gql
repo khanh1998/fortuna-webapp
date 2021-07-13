@@ -1,32 +1,21 @@
 mutation (
   $description: String
   $amount: Int
-  $total: Int
-  $user: ID
   $asset: ID
-  $prev: ID
+  $type: TYPE
 ) {
   createTransaction(
     input: {
       description: $description
       amount: $amount
-      total: $total
-      user: $user
       asset: $asset
-      prev: $prev
+      type: $type
     }
   ) {
     id
     description
-    total
     amount
-    asset {
-      id
-    }
-    prev {
-      amount
-      total
-      id
-    }
+    createdAt
+    updatedAt
   }
 }

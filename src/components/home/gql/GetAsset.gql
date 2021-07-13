@@ -1,9 +1,10 @@
 query {
-	Assets {
+	assets {
 		id
 		code
 		name
 		description
 		unit
+		amount
 	}
 }

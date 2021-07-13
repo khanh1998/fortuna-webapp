@@ -16,5 +16,6 @@ module.exports = {
     'import/prefer-default-export': 'off',
     'object-shorthand': 'off',
     'object-curly-newline': 'off',
+    'comma-dangle': 'off'
   },
 };

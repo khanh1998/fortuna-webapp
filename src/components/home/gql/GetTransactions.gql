@@ -1,21 +1,9 @@
 query GetTransaction($asset: ID) {
-  Transactions(asset: $asset) {
+  transactions(asset: $asset) {
     id
     description
     amount
-    total
     createdAt
     updatedAt
-    asset {
-      code
-      name
-      description
-    }
-    prev {
-      id
-      amount
-      total
-      description
-    }
   }
 }
