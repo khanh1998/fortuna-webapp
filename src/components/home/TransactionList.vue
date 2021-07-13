@@ -11,7 +11,9 @@
           >Transactions for
           <b>{{ ' ' + selectedAsset.name }}</b></v-list-item-title
         >
-        <v-list-item-subtitle> Total: {{ newTotal }} </v-list-item-subtitle>
+        <v-list-item-subtitle>
+          Total: {{ newTotal }} {{ selectedAsset.unit }}</v-list-item-subtitle
+        >
       </v-list-item-content>
     </v-list-item>
     <v-divider />
@@ -31,42 +33,45 @@
     <v-divider />
     <v-subheader>New transaction</v-subheader>
     <v-list-item>
-      <v-form>
-        <v-container>
-          <v-row>
-            <v-col>
-              <v-text-field
-                v-model="newTransaction.description"
-                placeholder="description"
-                clearable
-                hide-details="true"
-                outlined
-              ></v-text-field>
-            </v-col>
-            <v-col>
-              <v-text-field
-                outlined
-                type="number"
-                v-model="newTransaction.amount"
-                placeholder="amount"
-                hide-details="true"
-              ></v-text-field>
-            </v-col>
-          </v-row>
-          <v-row>
-            <v-col align-self="center">
-              <v-btn @click="createTransaction" depressed icon>
-                <v-icon color="green">mdi-plus</v-icon>
-              </v-btn>
-            </v-col>
-            <v-col align-self="center">
-              <v-btn @click="createTransaction" depressed icon>
-                <v-icon color="red">mdi-minus</v-icon>
-              </v-btn>
-            </v-col>
-          </v-row>
-        </v-container>
-      </v-form>
+      <v-row>
+        <v-col cols="3" class="d-flex flex-column justify-center align-center">
+          <v-btn-toggle mandatory v-model="newTransaction.type" class="mr-2">
+            <v-btn depressed icon>
+              <v-icon color="green">mdi-plus</v-icon>
+            </v-btn>
+            <v-btn depressed icon>
+              <v-icon color="red">mdi-minus</v-icon>
+            </v-btn>
+          </v-btn-toggle>
+        </v-col>
+        <v-col cols="6" class="d-flex flex-column justify-start align-center">
+          <div class="d-flex justify-start">
+            <v-text-field
+              v-model="newTransaction.description"
+              placeholder="description"
+              clearable
+              hide-details="true"
+              outlined
+            ></v-text-field>
+          </div>
+          <div class="d-flex flex-row justify-center align-center">
+            <v-text-field
+              type="number"
+              v-model="newTransaction.amount"
+              placeholder="amount"
+              hide-details="true"
+              :min="0"
+              outlined
+            >
+            </v-text-field>
+          </div>
+        </v-col>
+        <v-col class="d-flex justify-center align-center">
+          <v-btn @click="createTransaction">
+            <v-icon>mdi-send</v-icon>
+          </v-btn>
+        </v-col>
+      </v-row>
     </v-list-item>
   </v-list>
 </template>
@@ -93,6 +98,7 @@ export default {
     newTransaction: {
       description: '',
       amount: 0,
+      type: '',
     },
     selectedItem: 0,
   }),
@@ -111,13 +117,17 @@ export default {
   computed: {
     newTotal() {
       const oldValue = Number(this.selectedAsset.amount);
-      const addValue = Number(this.newTransaction.amount);
-      return oldValue + addValue;
+      return oldValue + this.absoluteValue;
+    },
+    absoluteValue() {
+      return this.newTransaction.type === 0
+        ? Number(this.newTransaction.amount)
+        : -Number(this.newTransaction.amount);
     },
   },
   methods: {
     createTransaction() {
-      const { description, amount } = this.newTransaction;
+      const { description } = this.newTransaction;
 
       this.$apollo
         .mutate({
@@ -125,7 +135,7 @@ export default {
           mutation: POST_TRANSACTION,
           variables: {
             description,
-            amount: Number(amount),
+            amount: this.absoluteValue,
             asset: this.selectedAsset.id,
             type: 'CREDIT',
           },
@@ -163,6 +173,12 @@ export default {
     selectTransaction() {
       const transaction = this.transactions[this.selectedItem];
       this.$emit('select-transaction', transaction);
+    },
+    setCreditType() {
+      this.newTransaction.type = 'CREDIT';
+    },
+    setDebitType() {
+      this.newTransaction.type = 'DEBIT';
     },
   },
   created() {},
