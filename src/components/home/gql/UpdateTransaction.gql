@@ -1,0 +1,10 @@
+mutation($id: ID, $input: TransactionUpdate) {
+	updateTransaction (id: $id, input: $input) {
+    id
+    description
+    amount
+		asset
+    createdAt
+    updatedAt
+  }
+}
